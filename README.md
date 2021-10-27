@@ -8,4 +8,4 @@ DC is a simple library to make a discord bot in C.
 
 [ ] Make a function to generate requests  
 [ ] Make a function to send requests to https urls  
-[ ] Refactoring of the code  
+[ ] Refactoring of the code
