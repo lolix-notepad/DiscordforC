@@ -1,1 +1,6 @@
 *.out
+<<<<<<< HEAD
+=======
+*-bin
+.env
+>>>>>>> 97ba9ef (feature/finished)
