@@ -1,5 +1,4 @@
 #include "../../extras/colors-terminal.h"
-#include "requests.h"
 #include "ssl-tsl-connection.h"
 
 #define ENDPOINT "https://discord.com/api"
@@ -54,13 +53,7 @@ int sendSimpleMessage(long long int channelID, char* msg) {
     if(server != 0)
         BIO_printf(outbio, "--Successfully made the TCP connection to: %s.\n", HOST);
 
-    /* Attach the SSL session */
-    SSL_set_fd(ssl, server);
-
-    /* Try to SSL-connect here, returns 1 for success             */
-    if (SSL_connect(ssl) != 1)
-        BIO_printf(outbio, RED"!!!Error: Could not build a SSL session to: %s.\n"RESET, HOST);
-    else
+    /* Attach the SSL session */ SSL_set_fd(ssl, server); /* Try to SSL-connect here, returns 1 for success             */ if (SSL_connect(ssl) != 1) BIO_printf(outbio, RED"!!!Error: Could not build a SSL session to: %s.\n"RESET, HOST); else
         BIO_printf(outbio, "--Successfully enabled SSL/TLS session to: %s.\n", HOST);
 
     ShowCerts(ssl,outbio);
