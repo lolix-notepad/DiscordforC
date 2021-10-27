@@ -1,3 +1,11 @@
 *.out
+<<<<<<< HEAD
 *-bin
 .env
+=======
+<<<<<<< HEAD
+=======
+*-bin
+.env
+>>>>>>> 97ba9ef (feature/finished)
+>>>>>>> c1cb1a8 (feature/finished)
