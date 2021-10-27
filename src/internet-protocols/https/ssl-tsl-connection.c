@@ -112,7 +112,6 @@ int sendSimpleMessage(long long int channelID, char* msg) {
     return 0;
 }
 
-
 char* buildRequest(long long int channelID, char* msg) {
     char *start_line                  = "POST /api/channels/%lld/messages HTTP/1.1\r\n";
     char *header_host                 = "Host: discord.com\r\n";
@@ -177,25 +176,6 @@ void GetCertSignature(X509* cert, BIO* outbio) {
     X509_ALGOR *sig_type = NULL;
     size_t sig_bytes = 0;
 
-    /* const ASN1_BIT_STRING *signature_me;
-    X509_get0_signature(&signature_me, NULL, cert);
-
-    sig_type = signature_me->sig_alg;
-    asn1_sig = cert->signature; */
-    // sig_type = cert->sig_alg;
-    // asn1_sig = cert->signature;
-    /* sig_bytes = asn1_sig->length;
-
-    BIO_printf(outbio, "Signature Algorithm:\n");
-    if (i2a_ASN1_OBJECT(outbio, sig_type->algorithm) <= 0)
-        BIO_printf(outbio, "Error getting the signature algorithm.\n");
-    else BIO_puts(outbio, "\n\n");
-
-    BIO_printf(outbio, "Signature Length:\n%d Bytes\n\n", sig_bytes);
-    BIO_printf(outbio, "Signature Data:");
-    if (X509_signature_dump(outbio, asn1_sig, 0) != 1)
-        BIO_printf(outbio, "Error printing the signature \n"); */
-
    printf("----\n"RESET);
 }
 
@@ -207,25 +187,8 @@ void DisplayPublicKeyInfo(X509* cert  ,BIO* outbio) {
     if ((pkey = X509_get_pubkey(cert)) == NULL)
         BIO_printf(outbio, RED"Error getting public key from certificate"RESET);
 
-    /* if (pkey) {
-        switch (pkey->type) {
-            case EVP_PKEY_RSA:
-                BIO_printf(outbio, "%d bit RSA Key\n\n", EVP_PKEY_bits(pkey));
-                break;
-            case EVP_PKEY_DSA:
-                BIO_printf(outbio, "%d bit DSA Key\n\n", EVP_PKEY_bits(pkey));
-                break;
-            default:
-                BIO_printf(outbio, "%d bit non-RSA/DSA Key\n\n", EVP_PKEY_bits(pkey));
-                break;
-        }
-    } */
-
     if(!PEM_write_bio_PUBKEY(outbio, pkey))
         BIO_printf(outbio,RED "Error writing public key data in PEM format"RESET);
 
     printf("----\n"RESET);
 }
-
-
-//348 lines

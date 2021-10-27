@@ -9,15 +9,10 @@ SRC    = src/main.c \
 		 src/internet-protocols/https/requests.c \
 		 src/internet-protocols/https/requests.h \
 		 src/extras/colors-terminal.h
-# SRC = src/*.c \
-# 	  src/extras/*.h \
-# 	  src/internet-protocols/https/*.c
 
 OBJS   = $(SRC:.c=.o)
 CFLAGS_VERBOSE = -Wall
 VERBOSE = true
-
-# export $(cat .env)
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
