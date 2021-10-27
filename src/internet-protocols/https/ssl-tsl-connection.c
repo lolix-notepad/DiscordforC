@@ -1,19 +1,16 @@
+#include "../../extras/colors-terminal.h"
+#include "requests.h"
 #include "ssl-tsl-connection.h"
-
-#define RED   "\x1B[31m"
-#define GRN   "\x1B[32m"
-#define YEL   "\x1B[33m"
-#define BLU   "\x1B[34m"
-#define MAG   "\x1B[35m"
-#define CYN   "\x1B[36m"
-#define WHT   "\x1B[37m"
-#define RESET "\x1B[0m"
 
 #define ENDPOINT "https://discord.com/api"
 #define TOKEN_BOT getenv("TOKEN_BOT")
 #define PORT "443"
 #define HOST "discord.com"
 #define REQUEST_FILE "/"
+
+int lengthInt(long long int i) {
+    return snprintf(NULL, 0, "%lld", i);
+}
 
 int sendSimpleMessage(long long int channelID, char* msg) {
     BIO *certbio         =  NULL;
@@ -48,7 +45,7 @@ int sendSimpleMessage(long long int channelID, char* msg) {
         BIO_printf(outbio, "Unable to create a new SSL context SSL_CTX_new.\n");
 
     SSL_CTX_set_options(ctx, SSL_OP_NO_SSLv2);
-  
+
     /* Create new SSL connection state */
     ssl = SSL_new(ctx);
 
@@ -56,18 +53,18 @@ int sendSimpleMessage(long long int channelID, char* msg) {
     server = create_socket(HOST, PORT, outbio);
     if(server != 0)
         BIO_printf(outbio, "--Successfully made the TCP connection to: %s.\n", HOST);
-  
+
     /* Attach the SSL session */
     SSL_set_fd(ssl, server);
-  
+
     /* Try to SSL-connect here, returns 1 for success             */
     if (SSL_connect(ssl) != 1)
         BIO_printf(outbio, RED"!!!Error: Could not build a SSL session to: %s.\n"RESET, HOST);
     else
         BIO_printf(outbio, "--Successfully enabled SSL/TLS session to: %s.\n", HOST);
- 
+
     ShowCerts(ssl,outbio);
-  
+
     /* --- Send --- */
     printf(BLU"----Request----\n");
 
@@ -84,7 +81,7 @@ int sendSimpleMessage(long long int channelID, char* msg) {
 
     /* encrypt & send message */
     int bytes;
-    int s= 0; 
+    int s = 0; 
 
     printf(BLU"----Response----\n");
 
@@ -111,17 +108,15 @@ int sendSimpleMessage(long long int channelID, char* msg) {
     X509_free(cert);
     SSL_CTX_free(ctx);
     BIO_printf(outbio, "Finished SSL/TLS connection with Host: %s.\n", HOST);
-    return(0);
+        
+    return 0;
 }
 
-int lengthInt(long long int i) {
-    return snprintf(NULL, 0, "%lld", i);
-}
 
 char* buildRequest(long long int channelID, char* msg) {
     char *start_line                  = "POST /api/channels/%lld/messages HTTP/1.1\r\n";
     char *header_host                 = "Host: discord.com\r\n";
-    char *header_connection                = "Connection: close\r\n";
+    char *header_connection           = "Connection: close\r\n";
     char *header_content_type         = "Content-Type: application/json\r\n";
     char *header_authorization_base   = "Authorization: Bot %s\r\n";
     char *header_content_length_base  = "Content-Length: %d\r\n\r\n";
@@ -232,43 +227,5 @@ void DisplayPublicKeyInfo(X509* cert  ,BIO* outbio) {
     printf("----\n"RESET);
 }
 
-/* create_socket() : the socket & TCP-connect to server */
-int create_socket(char h[], char p[], BIO *out) {
-    int sockfd;
-    char hostname[256] = "";
-    char    portnum[6] ;
-    char      proto[6] = "";
-    char      *tmp_ptr = NULL;
-    int           port;
-    struct hostent *host;
-    struct sockaddr_in dest_addr;
- 
-    strcpy(portnum,p);
-    strcpy(hostname,h);
-    port = atoi(portnum);
-
-    if ( (host = gethostbyname(hostname)) == NULL ) {
-        BIO_printf(out, "Error: Cannot resolve hostname %s.\n",  hostname);
-        abort();
-    }
- 
-    /* create the basic TCP socket */
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    dest_addr.sin_family=AF_INET;
-    dest_addr.sin_port=htons(port);
-    dest_addr.sin_addr.s_addr = *(long*)(host->h_addr);
-
-    /*reset the  struct*/
-    memset(&(dest_addr.sin_zero), '\0', 8);
-    tmp_ptr = inet_ntoa(dest_addr.sin_addr);
-
-    /* Try to make the host connection */
-    if ( connect(sockfd, (struct sockaddr *) &dest_addr, sizeof(struct sockaddr)) == -1 ) {
-        BIO_printf(out, "Error: Cannot connect to host %s [%s] on port %d.\n",
-        hostname, tmp_ptr, port);
-    }
-
-    return sockfd;
-}
 
 //348 lines

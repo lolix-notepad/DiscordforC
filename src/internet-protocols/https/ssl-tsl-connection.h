@@ -1,5 +1,5 @@
-#ifndef HEADER_FILE
-#define HEADER_FILE
+#ifndef SSL_TSL_CONNECTION
+#define SSL_TSL_CONNECTION
 
 #include <stdio.h>
 #include <unistd.h>
